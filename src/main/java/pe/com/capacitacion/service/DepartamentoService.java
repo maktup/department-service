@@ -9,9 +9,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
-import com.google.gson.Gson;
-import com.netflix.appinfo.InstanceInfo;
-import com.netflix.discovery.EurekaClient;
+import com.google.gson.Gson; 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand; 
 import pe.com.capacitacion.bean.Auditoria;
 import pe.com.capacitacion.bean.ConfigurationData_01;
@@ -42,10 +40,7 @@ import pe.com.capacitacion.util.Constantes;
 	  		
 		@Autowired
 		private RestTemplateBuilder objTemplate;  
-		
-		@Autowired
-		private EurekaClient objClient;
-		  
+        
 		@Autowired
 		private AuditoriaException objAuditoriaException; 	
  
@@ -175,18 +170,8 @@ import pe.com.capacitacion.util.Constantes;
 			   LOGGER.info( "vNombreServicio: [" + vNombreServicio + "], vValor_01: [" + vValor_01 + "], vNombres: [" + vNombres + "], vDni: [" + vDni + "]" ); 
 			    
 			   RestTemplate objRspTmp = this.objTemplate.build(); 
- 		 
-			   InstanceInfo vIdIstanciaEureka_01 = this.objClient.getNextServerFromEureka( Constantes.INSTANCIA_EUREKA_01, false );
-			   InstanceInfo vIdIstanciaEureka_02 = this.objClient.getNextServerFromEureka( Constantes.INSTANCIA_EUREKA_02, false );			   
-			   LOGGER.info( "========>: vIdIstanciaEureka_01 [" + vIdIstanciaEureka_01 + "]" );			   
-			   LOGGER.info( "========>: vIdIstanciaEureka_02 [" + vIdIstanciaEureka_02 + "]" );
-			   
-			   String  vURLInst01  = vIdIstanciaEureka_01.getHomePageUrl(); 
-			   String  vURLInst02  = vIdIstanciaEureka_02.getHomePageUrl(); 
-			   LOGGER.info( "========>: vURLInst01 [" + vURLInst01 + "]" );
-			   LOGGER.info( "========>: vURLInst02 [" + vURLInst02 + "]" );			   
-			   
-			   String vURL01 = (vURLInst01 + Constantes.SERVICE_NAME_01 + "/" + Constantes.HTTP_METHOD_01 + "/organizaciones/" + organizationId + "/departamentos"); 
+               //http://localhost:8080/departmentservice/get/organizaciones/1/departamentos
+			   String vURL01 = (this.constantes.ingressDepartment + "/" + Constantes.SERVICE_NAME_02 + "/" + Constantes.HTTP_METHOD_01 + "/organizaciones/" + organizationId + "/departamentos"); 
 			   LOGGER.info( "========>: vURL01 [" + vURL01 + "]" );
 			   
 			   String vCadenaJSON_01 = objRspTmp.getForObject( vURL01, String.class );
@@ -207,8 +192,8 @@ import pe.com.capacitacion.util.Constantes;
 			   for( int i=0; i<listaDepartamento.size(); i++ ){
 				    objDepTemp = listaDepartamento.get( i );				    
 				    vIdDepTemp = objDepTemp.getId(); 
-
-				    String vURL02 = (vURLInst02 + Constantes.SERVICE_NAME_02 + "/" + Constantes.HTTP_METHOD_01 + "/departamentos/" + vIdDepTemp + "/empleados"); 
+                    //http://localhost:8092/employeeservice/get/departamentos/{departmentId}/empleados
+				    String vURL02 = (this.constantes.ingressEmployee + "/" + Constantes.SERVICE_NAME_01 + "/" + Constantes.HTTP_METHOD_01 + "/departamentos/" + vIdDepTemp + "/empleados"); 
 				    LOGGER.info( "========>: vURL02 [" + vURL02 + "]" );
 				    
 				    String vCadenaJSON_02 = objRspTmp.getForObject( vURL02, String.class );
