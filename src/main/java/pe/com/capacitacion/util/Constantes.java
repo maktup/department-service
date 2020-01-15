@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 		@Value( "${propiedades.config.valor_01}" )    //ACCESO: [propiedades.config.valor_01:]
 		public String valor01; 
 	    
+		
 	    @Value( "${ingress.dns.employee}" )          //ACCESO: al valor REMOTO [ingress.dns.employee]
 	    public String ingressEmployee;
 		
