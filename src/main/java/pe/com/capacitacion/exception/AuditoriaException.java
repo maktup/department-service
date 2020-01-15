@@ -115,7 +115,7 @@ import pe.com.capacitacion.bean.ResponseMsg;
 	    * @return Auditoria
 	    **/
 	    public Auditoria cargarDatosAuditoria( String vIpApp, String vNombreApp, String vUsuarioApp, String vMensajeApp ){ 
-		       LOGGER.error( "------> 'cargarDatosAuditoria' " );
+		       LOGGER.info( "------> 'cargarDatosAuditoria' " );
  
 		       Auditoria objAuditoria = new Auditoria();
  
