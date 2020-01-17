@@ -50,8 +50,12 @@ import pe.com.capacitacion.service.DepartamentoService;
  
 			   //Ejecutar: 
 			   ResponseMsg objResponseMsg = this.objDepartamentoService.consultarDepartamentosAllService(); 
+			   
+			   String vValorKUBERNETES = System.getenv().getOrDefault( "GREETING_PREFIX", "Hi" ); 
+			   LOGGER.info( "==============> vValorKUBERNETES: " + vValorKUBERNETES );
+			   
 			   return objResponseMsg; 
-		}	
+		}
 		
 	   /**
 	    * consultarDepartamentosPorId	
