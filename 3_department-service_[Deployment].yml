@@ -1,11 +1,12 @@
 
 #[DEPLOYMENT]
-#2_employee-service_[Deployment].yml
+#3_department-service_[Deployment].yml
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: department-service
+  namespace: default
   labels:
     app: microservicio-department-service
     role: backend
@@ -15,16 +16,29 @@ spec:
   selector:
     matchLabels:
       app: microservicio-department-service
-      version: v1.0.0
+      version: v1.0.0  
   template:
     metadata:
       labels:
         app: microservicio-department-service
         version: v1.0.0
     spec:
-      containers:
+      containers:                  
         - name: microservicio-department-service
           image: maktup/department-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
+          env:
+          #CONFIGURACION DE 'SECRETs': 
+          - name: BOOTADMIN_USUARIO
+            valueFrom:
+              secretKeyRef:
+                key: BOOTADMIN_USUARIO
+                name: department-service-secret
+          - name: BOOTADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: BOOTADMIN_PASSWORD
+                name: department-service-secret
+
