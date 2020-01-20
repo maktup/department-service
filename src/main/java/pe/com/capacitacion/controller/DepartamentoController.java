@@ -49,11 +49,7 @@ import pe.com.capacitacion.service.DepartamentoService;
 			   LOGGER.info( "-----> Departmento 'consultarDepartamentosAll'" );
  
 			   //Ejecutar: 
-			   ResponseMsg objResponseMsg = this.objDepartamentoService.consultarDepartamentosAllService(); 
-			   
-			   //String vValorKUBERNETES = System.getenv().getOrDefault( "GREETING_PREFIX", "Hi" ); 
-			   //LOGGER.info( "==============> vValorKUBERNETES: " + vValorKUBERNETES );
-			   
+			   ResponseMsg objResponseMsg = this.objDepartamentoService.consultarDepartamentosAllService(); 	 
 			   return objResponseMsg; 
 		}
 		
