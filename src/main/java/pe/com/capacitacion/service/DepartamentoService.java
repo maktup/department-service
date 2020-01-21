@@ -47,7 +47,10 @@ import pe.com.capacitacion.util.Constantes;
 
         @Autowired
         private ConfigurationData_02 objConfigurationData02;   //ACCESO: inicia con [grupoconfig02]  
- 
+		
+        @Autowired
+        private org.springframework.core.env.Environment env;
+        
 	   /**	
 	    * agregarDepartamentoService	
 	    * @param  departamento
@@ -80,6 +83,11 @@ import pe.com.capacitacion.util.Constantes;
 			   
 			   ResponseMsg objResponseMsg = new ResponseMsg(); 			   
 			   this.mostrarVariablesEntorno( this.constantes, this.objConfigurationData01, this.objConfigurationData02 );   
+			   
+			   //IMPORTANTE: RECUPERA EL 'SECRET' YA 'DESENCRIPTADO'.
+			   String vUsuario  =  this.env.getProperty( "BOOTADMIN_USUARIO" ); 
+			   String vPassword =  this.env.getProperty( "BOOTADMIN_USUARIO" ); 
+			   LOGGER.info( "- vUsuario: [" + vUsuario + "], - vPassword: [" + vPassword + "]" );
 			   
 			   List<Departamento> listaDepartamentos = this.objRepositorio.consultarDepartamentosAll(); 
 			   Auditoria          objAuditoria       = this.objAuditoriaException.cargarDatosAuditoria( this.constantes.IP_APP, this.constantes.nombreServicio, this.constantes.USUARIO_APP, this.constantes.MSJ_APP_OK ); 
