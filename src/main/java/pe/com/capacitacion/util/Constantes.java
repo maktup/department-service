@@ -17,14 +17,21 @@ import org.springframework.stereotype.Component;
 		public String valor01; 
 	    
 		
-	    @Value( "${ingress.dns.employee}" )          //ACCESO: al valor REMOTO [ingress.dns.employee]
+	    @Value( "${ingress.dns.employee}" )           //ACCESO: al valor REMOTO [ingress.dns.employee]
 	    public String ingressEmployee;
 		
-	    @Value( "${ingress.dns.department}" )        //ACCESO: al valor REMOTO [ingress.dns.department]
+	    @Value( "${ingress.dns.department}" )         //ACCESO: al valor REMOTO [ingress.dns.department]
 	    public String ingressDepartment;
 	    
 	    @Value( "${ingress.dns.organization}" )       //ACCESO: al valor REMOTO [ingress.dns.organization]
 	    public String ingressOrganization;
+	    
+	    
+	    @Value( "${jeaguer.conexion.url.server}" )    //ACCESO: al valor REMOTO [jeaguer.conexion.url.server]
+	    public String jeagerUrlServer;
+        
+	    @Value( "${spring.application.name}" )        //ACCESO: al valor REMOTO [spring.application.name]
+	    public String nombreMicroServicio;
 	    
 		
 		public static String INSTANCIA_EUREKA_01 = "EMPLOYEE-SERVICE"; 
