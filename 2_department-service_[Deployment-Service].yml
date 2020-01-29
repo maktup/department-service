@@ -1,6 +1,6 @@
 
-#[DEPLOYMENT]
-#3_department-service_[Deployment].yml
+#[DEPLOYMENT-SERVICE]
+#2_department-service_[Deployment-Service].yml
 
 apiVersion: apps/v1
 kind: Deployment
@@ -32,10 +32,11 @@ spec:
           #--------------------------#  
           volumeMounts:
           - mountPath: /app/log
-            name: volumen-logs
+            name: volumen-logs 
       volumes:
-        - name: volumen-logs
-          emptyDir: {}   
+        - name: volumen-logs 
+          persistentVolumeClaim:
+            claimName: capacitacion-microservicios-pvc
           #--------------------------#   
           env:
           #CONFIGURACION DE 'SECRETs': 
@@ -50,3 +51,26 @@ spec:
                 key: BOOTADMIN_PASSWORD
                 name: department-service-secret
 
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: department-service
+  namespace: default
+  labels:
+    app: microservicio-department-service
+    role: backend
+    stage: production
+spec: 
+  ports:
+    - name: http
+      port: 8080
+  selector:
+    app: microservicio-department-service
+    version: v1.0.0
+  type: NodePort
+  
+
+  
