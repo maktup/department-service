@@ -1,5 +1,11 @@
 package pe.com.capacitacion;
 
+import io.opentracing.Tracer;
+import io.jaegertracing.Configuration;
+import pe.com.capacitacion.util.Constantes;
+import io.jaegertracing.samplers.ConstSampler; 
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,20 +13,12 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean; 
-import io.jaegertracing.Configuration;
 import io.jaegertracing.Configuration.ReporterConfiguration;
 import io.jaegertracing.Configuration.SamplerConfiguration;
 import io.jaegertracing.Configuration.SenderConfiguration;
-import io.jaegertracing.samplers.ConstSampler;
-import io.opentracing.Tracer;
-import pe.com.capacitacion.bean.Departamento;
-import pe.com.capacitacion.repository.DepartamentoRepository;
-import pe.com.capacitacion.util.Constantes;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
@@ -45,23 +43,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 	    **/
 	    public static void main( String[] argumentos ){
 		 	   SpringApplication.run( MainApp.class, argumentos );
-	    }
-	 
-	   /**
-	    * repository  
-	    * @return DepartamentoRepository 
-	    **/
-	    @Bean
-	    public DepartamentoRepository repository(){
-			   DepartamentoRepository objRepositorio = new DepartamentoRepository();
-			
-			   objRepositorio.agregarDepartamento( new Departamento( 1L, "DESARROLLO"  ) );
-			   objRepositorio.agregarDepartamento( new Departamento( 1L, "OPERACIONES" ) );
-			   objRepositorio.agregarDepartamento( new Departamento( 2L, "DESARROLLO"  ) );
-			   objRepositorio.agregarDepartamento( new Departamento( 2L, "OPERACIONES" ) );	
-			
-			   return objRepositorio;
-	    }
+	    } 
 	
 	    //---------------------------------------- [SWAGGER] ----------------------------------------// 
 		public ApiInfo apiInfo(){

@@ -1,86 +1,95 @@
 package pe.com.capacitacion.exception;
  
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component; 
+import lombok.extern.slf4j.Slf4j;
 import pe.com.capacitacion.bean.Auditoria;
-import pe.com.capacitacion.bean.Empleado;
-import pe.com.capacitacion.bean.ResponseMsg;
+import pe.com.capacitacion.bean.Departamento; 
+import pe.com.capacitacion.dto.ResponseDepMsg; 
+import pe.com.capacitacion.util.Constantes; 
  
 /**
  * AuditoriaException IMPORTANTE: los parametros deben ser EXACTAMENTE a los mismos del metodo que lo llama. 
  * @cguerra
  **/
+ @Slf4j      //Autogenerar LOG4J.
  @Component
  public class AuditoriaException{
-	
-	    private static final Logger LOGGER = LoggerFactory.getLogger( AuditoriaException.class );
- 
+	 
 	   /**
 	    * lanzarExceptionWS 
 	    * @param  objetoParam
 	    * @param  e
-	    * @return ResponseMsg
+	    * @return ResponseEntity<ResponseDepMsg>
 	    **/
-	    public ResponseMsg lanzarExceptionWS( Empleado objetoParam, Throwable e ){
-		       LOGGER.error( "------> 'lanzarExceptionWS' " );
+	    public ResponseEntity<ResponseDepMsg> lanzarExceptionWS( Departamento objetoParam, Throwable e ){
+		       log.error( "------> 'lanzarExceptionWS' " );
 		       
-		       ResponseMsg objResponseMsg = new ResponseMsg();	 
-		       Auditoria   objAuditoria   = this.cargarDatosAuditoriaException( e ); 
+		       ResponseDepMsg objResponseDepMsg = new ResponseDepMsg();	 
+		       Auditoria      objAuditoria      = this.cargarDatosAuditoriaException( e ); 
 		       
 			   //Agregando:  			   
-			   objResponseMsg.setAuditoria( objAuditoria );  
-			   return objResponseMsg;
+			   objResponseDepMsg.setAuditoria( objAuditoria );  
+			   
+			   ResponseEntity<ResponseDepMsg> objRetorno = new ResponseEntity<ResponseDepMsg>( objResponseDepMsg, HttpStatus.BAD_REQUEST ); 
+			   return objRetorno;
 	    } 
     
 	   /**
 	    * lanzarExceptionWS 
 	    * @param  id
 	    * @param  e
-	    * @return ResponseMsg
+	    * @return ResponseEntity<ResponseDepMsg>
 	    **/
-	    public ResponseMsg lanzarExceptionWS( Long id, Throwable e ){
-		       LOGGER.error( "------> 'lanzarExceptionWS' " );
+	    public ResponseEntity<ResponseDepMsg> lanzarExceptionWS( Long id, Throwable e ){
+		       log.error( "------> 'lanzarExceptionWS' " );
  
-		       ResponseMsg objResponseMsg = new ResponseMsg();	 
-		       Auditoria   objAuditoria   = this.cargarDatosAuditoriaException( e ); 
+		       ResponseDepMsg objResponseDepMsg = new ResponseDepMsg();	 
+		       Auditoria      objAuditoria      = this.cargarDatosAuditoriaException( e ); 
 		       
 			   //Agregando:  			   
-			   objResponseMsg.setAuditoria( objAuditoria );  
-			   return objResponseMsg;
+			   objResponseDepMsg.setAuditoria( objAuditoria );  
+			   
+			   ResponseEntity<ResponseDepMsg> objRetorno = new ResponseEntity<ResponseDepMsg>( objResponseDepMsg, HttpStatus.BAD_REQUEST ); 
+			   return objRetorno;
 	    } 
 	    
 	   /**
 	    * lanzarListaExceptionWS 
 	    * @param  e
-	    * @return ResponseMsg
+	    * @return ResponseEntity<ResponseDepMsg>
 	    **/
-	    public ResponseMsg lanzarListaExceptionWS( Throwable e ){
-		       LOGGER.error( "------> 'lanzarListaExceptionWS' " );
+	    public ResponseEntity<ResponseDepMsg> lanzarListaExceptionWS( Throwable e ){
+		       log.error( "------> 'lanzarListaExceptionWS' " );
  
-		       ResponseMsg objResponseMsg = new ResponseMsg();	 
+		       ResponseDepMsg objResponseDepMsg = new ResponseDepMsg();	 
 		       Auditoria   objAuditoria    = this.cargarDatosAuditoriaException( e );
 		  
 			   //Agregando:  			   
-			   objResponseMsg.setAuditoria( objAuditoria );  
-			   return objResponseMsg;
+			   objResponseDepMsg.setAuditoria( objAuditoria );  
+			   
+			   ResponseEntity<ResponseDepMsg> objRetorno = new ResponseEntity<ResponseDepMsg>( objResponseDepMsg, HttpStatus.BAD_REQUEST ); 
+			   return objRetorno;
 	    }  
    
 	   /**
 	    * lanzarListaExceptionWS 
 	    * @param  organizationId
         * @param  e
-	    * @return ResponseMsg
+	    * @return ResponseEntity<ResponseDepMsg>
 	    **/
-	    public ResponseMsg lanzarListaExceptionWS( Long organizationId, Throwable e ){
-		       LOGGER.error( "------> 'lanzarListaExceptionWS' " );
+	    public ResponseEntity<ResponseDepMsg> lanzarListaExceptionWS( Long organizationId, Throwable e ){
+		       log.error( "------> 'lanzarListaExceptionWS' " );
  
-		       ResponseMsg objResponseMsg = new ResponseMsg();	 
+		       ResponseDepMsg objResponseDepMsg = new ResponseDepMsg();	 
 		       Auditoria   objAuditoria   = this.cargarDatosAuditoriaException( e );
 		  
 			   //Agregando:  			   
-			   objResponseMsg.setAuditoria( objAuditoria );  
-			   return objResponseMsg;
+			   objResponseDepMsg.setAuditoria( objAuditoria );  
+			   
+			   ResponseEntity<ResponseDepMsg> objRetorno = new ResponseEntity<ResponseDepMsg>( objResponseDepMsg, HttpStatus.BAD_REQUEST ); 
+			   return objRetorno;
 	    } 
 	    
 	   /**
@@ -89,19 +98,16 @@ import pe.com.capacitacion.bean.ResponseMsg;
 	    * @return Auditoria
 	    **/
 	    private Auditoria cargarDatosAuditoriaException( Throwable e ){ 
-		        LOGGER.error( "------> 'cargarDatosAuditoriaException' " );
+		        log.error( "------> 'cargarDatosAuditoriaException' " );
  
 		        Auditoria objAuditoria = new Auditoria();
 		       
-		        String vIp         = "1.1.1.1";
-		        String vNombreApp  = "XXX";
-		        String vUsuarioApp = "rguerra"; 
-		        String vMensajeApp = "EXCEPTION encontrada: \n" + e.getMessage(); 
-	  
-		        objAuditoria.setIpApp( vIp );
-		        objAuditoria.setNombreApp( vNombreApp );
-		        objAuditoria.setUsuarioApp( vUsuarioApp );
-		        objAuditoria.setMensajeApp( vMensajeApp ); 
+		        objAuditoria.setIpApp(      Constantes.IP_APP_NOK );
+		        objAuditoria.setNombreApp(  Constantes.NOMBRE_APP_NOK  );
+		        objAuditoria.setUsuarioApp( Constantes.USUARIO_APP_NOK ); 
+		        objAuditoria.setMensajeApp( Constantes.MSJ_APP_NOK + ": " + e.getMessage() ); 
+		        objAuditoria.setCodigoApp(  Constantes.COD_APP_NOK );
+		        objAuditoria.setCodigoHttp( HttpStatus.BAD_REQUEST + "" );  //VALIDAR EL TIPO DE POSIBLE EXCEPTION. 
         
 			    return objAuditoria;
 	    } 
@@ -115,14 +121,16 @@ import pe.com.capacitacion.bean.ResponseMsg;
 	    * @return Auditoria
 	    **/
 	    public Auditoria cargarDatosAuditoria( String vIpApp, String vNombreApp, String vUsuarioApp, String vMensajeApp ){ 
-		       LOGGER.info( "------> 'cargarDatosAuditoria' " );
+		       log.info( "------> 'cargarDatosAuditoria' " );
  
 		       Auditoria objAuditoria = new Auditoria();
  
 		       objAuditoria.setIpApp( vIpApp );
-		       objAuditoria.setNombreApp( vNombreApp );
+		       objAuditoria.setNombreApp(  vNombreApp );
 		       objAuditoria.setUsuarioApp( vUsuarioApp );
 		       objAuditoria.setMensajeApp( vMensajeApp ); 
+		       objAuditoria.setCodigoApp(  Constantes.COD_APP_OK ); 
+		       objAuditoria.setCodigoHttp( HttpStatus.OK + "" ); 
         
 			   return objAuditoria;
 	    } 
