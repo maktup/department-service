@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pe.com.capacitacion.bean.Departamento;
 import pe.com.capacitacion.bean.ResponseMsg;
-import pe.com.capacitacion.service.DepartamentoService;
-import pe.com.capacitacion.util.UtilJeager;
+import pe.com.capacitacion.service.DepartamentoService; 
 
 /**
  * DepartmentoController
@@ -20,7 +19,7 @@ import pe.com.capacitacion.util.UtilJeager;
  **/
  @RestController
  @RequestMapping( "/departmentservice" )
- public class DepartamentoController extends UtilJeager{
+ public class DepartamentoController{
 	
 		private static final Logger LOGGER = LoggerFactory.getLogger( DepartamentoController.class );
  
@@ -34,8 +33,7 @@ import pe.com.capacitacion.util.UtilJeager;
 	    **/
 		@PostMapping( "/post/departamentos" )
 		public ResponseMsg agregarDepartamento( @RequestBody Departamento departamento ){
-			   LOGGER.info( "-----> Departamento 'agregarDepartamento': {}", departamento ); 
-			   this.jaegerAlertTracer(); 
+			   LOGGER.info( "-----> Departamento 'agregarDepartamento': {}", departamento );  
 			   
 			   //Ejecutar: 
 			   ResponseMsg objResponseMsg = this.objDepartamentoService.agregarDepartamentoService( departamento );  
@@ -48,8 +46,7 @@ import pe.com.capacitacion.util.UtilJeager;
 		 **/
 		@GetMapping( "/get/departamentos" )
 		public ResponseMsg consultarDepartamentosAll(){ 
-			   LOGGER.info( "-----> Departmento 'consultarDepartamentosAll'" );
-			   this.jaegerAlertTracer(); 
+			   LOGGER.info( "-----> Departmento 'consultarDepartamentosAll'" ); 
 			   
 			   //Ejecutar: 
 			   ResponseMsg objResponseMsg = this.objDepartamentoService.consultarDepartamentosAllService(); 	 
@@ -63,8 +60,7 @@ import pe.com.capacitacion.util.UtilJeager;
 	    **/ 
 		@GetMapping( "/get/departamentos/{id}" )
 		public ResponseMsg consultarDepartamentosPorId( @PathVariable( "id" ) Long id ){ 
-			   LOGGER.info( "-----> Departamento 'consultarDepartamentosPorId': id={}", id );
-			   this.jaegerAlertTracer(); 
+			   LOGGER.info( "-----> Departamento 'consultarDepartamentosPorId': id={}", id ); 
 			   
 			   //Ejecutar: 
 			   ResponseMsg objResponseMsg = this.objDepartamentoService.consultarDepartamentosPorIdService( id ); 
@@ -78,8 +74,7 @@ import pe.com.capacitacion.util.UtilJeager;
 	    **/
 		@GetMapping( "/get/organizaciones/{organizationId}/departamentos" )
 		public ResponseMsg consultarDepartamentosPorOrganizacion( @PathVariable( "organizationId" ) Long organizationId ){
-			   LOGGER.info( "-----> Departamento 'consultarDepartamentosPorOrganizacion': organizationId={}", organizationId );
-			   this.jaegerAlertTracer(); 
+			   LOGGER.info( "-----> Departamento 'consultarDepartamentosPorOrganizacion': organizationId={}", organizationId ); 
 			   
 			   //Ejecutar:  
 			   ResponseMsg objResponseMsg = this.objDepartamentoService.consultarDepartamentosPorOrganizacionService( organizationId ); 

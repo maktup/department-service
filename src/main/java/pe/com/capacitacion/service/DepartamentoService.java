@@ -64,7 +64,7 @@ import pe.com.capacitacion.util.Constantes;
 			   this.mostrarVariablesEntorno( this.constantes, this.objConfigurationData01, this.objConfigurationData02 );  
 			   
 			   this.objRepositorio.agregarDepartamento( departamento );  
-			   Auditoria objAuditoria = this.objAuditoriaException.cargarDatosAuditoria( this.constantes.IP_APP, this.constantes.nombreServicio, this.constantes.USUARIO_APP, this.constantes.MSJ_APP_OK ); 
+			   Auditoria objAuditoria = this.objAuditoriaException.cargarDatosAuditoria( Constantes.IP_APP_OK, this.constantes.nombreServicio, Constantes.USUARIO_APP_OK, Constantes.MSJ_APP_OK ); 
   
 			   //Agregando: 
 			   objResponseMsg.setListaDepartamentos( new ArrayList<Departamento>() );
@@ -90,7 +90,7 @@ import pe.com.capacitacion.util.Constantes;
 			   LOGGER.info( "- vUsuario: [" + vUsuario + "], - vPassword: [" + vPassword + "]" );
 			   
 			   List<Departamento> listaDepartamentos = this.objRepositorio.consultarDepartamentosAll(); 
-			   Auditoria          objAuditoria       = this.objAuditoriaException.cargarDatosAuditoria( this.constantes.IP_APP, this.constantes.nombreServicio, this.constantes.USUARIO_APP, this.constantes.MSJ_APP_OK ); 
+			   Auditoria          objAuditoria       = this.objAuditoriaException.cargarDatosAuditoria( Constantes.IP_APP_OK, this.constantes.nombreServicio, Constantes.USUARIO_APP_OK, Constantes.MSJ_APP_OK ); 
 
 			   //Agregando: 
 			   objResponseMsg.setListaDepartamentos( listaDepartamentos );
@@ -112,7 +112,7 @@ import pe.com.capacitacion.util.Constantes;
 			   this.mostrarVariablesEntorno( this.constantes, this.objConfigurationData01, this.objConfigurationData02 ); 
 			   
 			   Departamento objDepartamento = this.objRepositorio.consultarDepartamentosPorId( id );  
-		       Auditoria    objAuditoria    = this.objAuditoriaException.cargarDatosAuditoria( this.constantes.IP_APP, this.constantes.nombreServicio, this.constantes.USUARIO_APP, this.constantes.MSJ_APP_OK );
+		       Auditoria    objAuditoria    = this.objAuditoriaException.cargarDatosAuditoria( Constantes.IP_APP_OK, this.constantes.nombreServicio, Constantes.USUARIO_APP_OK, Constantes.MSJ_APP_OK );
 						
 			   List<Departamento> listaDepartamento = new ArrayList<Departamento>();
 			   listaDepartamento.add( objDepartamento );
@@ -137,7 +137,7 @@ import pe.com.capacitacion.util.Constantes;
 			   this.mostrarVariablesEntorno( this.constantes, this.objConfigurationData01, this.objConfigurationData02 );  
 			   
 			   List<Departamento> listaDepartamentos = this.objRepositorio.consultarDepartamentosPorOrganizacion( organizationId ); 
-			   Auditoria          objAuditoria       = this.objAuditoriaException.cargarDatosAuditoria( this.constantes.IP_APP, this.constantes.nombreServicio, this.constantes.USUARIO_APP, this.constantes.MSJ_APP_OK );
+			   Auditoria          objAuditoria       = this.objAuditoriaException.cargarDatosAuditoria( Constantes.IP_APP_OK, this.constantes.nombreServicio, Constantes.USUARIO_APP_OK, Constantes.MSJ_APP_OK );
 				
 			   //Agregando: 
 		       objResponseMsg.setListaDepartamentos( listaDepartamentos ); 
@@ -199,7 +199,7 @@ import pe.com.capacitacion.util.Constantes;
 		  
 			   List<Departamento> listaDepartamentoTemp = new ArrayList<Departamento>(); 
 			   listaDepartamentoTemp.add( objDepTemp ); 
-			   Auditoria objAuditoria = this.objAuditoriaException.cargarDatosAuditoria( this.constantes.IP_APP, this.constantes.nombreServicio, this.constantes.USUARIO_APP, this.constantes.MSJ_APP_OK ); 
+			   Auditoria objAuditoria = this.objAuditoriaException.cargarDatosAuditoria( Constantes.IP_APP_OK, this.constantes.nombreServicio, Constantes.USUARIO_APP_OK, Constantes.MSJ_APP_OK ); 
 			   
 			   //Agregando: 
 			   objResponseMsg.setListaDepartamentos( listaDepartamentoTemp );
