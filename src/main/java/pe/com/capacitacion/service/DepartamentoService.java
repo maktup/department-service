@@ -60,7 +60,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 			   RestTemplate objRspTmp = this.objTemplate.build(); 
 		 	   
 			   //Armando URI: 
-			   String vURL01 = (this.constantes.ingressDepartment + "/" + Constantes.SERVICE_NAME_04 + "/" + Constantes.HTTP_METHOD_02 + vURI); 
+			   String vURL01 = (this.constantes.ingressUtiCapadb + "/" + Constantes.SERVICE_NAME_04 + "/" + Constantes.HTTP_METHOD_02 + vURI); 
 			   log.info( "========>: vURL01 [" + vURL01 + "]" );
 			   
 			   //Transformar de OBJETO a JSON:                                         
@@ -102,7 +102,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 			   RestTemplate objRspTmp = this.objTemplate.build(); 
 		       
 			   //Armando URI: 
-			   String vURL01 = (this.constantes.ingressDepartment + "/" + Constantes.SERVICE_NAME_04 + "/" + Constantes.HTTP_METHOD_03 + vURI + id); 
+			   String vURL01 = (this.constantes.ingressUtiCapadb + "/" + Constantes.SERVICE_NAME_04 + "/" + Constantes.HTTP_METHOD_03 + vURI + id); 
 			   log.info( "========>: vURL01 [" + vURL01 + "]" );
 			   
 			   //Enviar mensaje DELETE: 
