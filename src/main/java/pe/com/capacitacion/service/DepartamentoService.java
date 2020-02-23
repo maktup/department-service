@@ -8,6 +8,7 @@ import pe.com.capacitacion.bean.Auditoria;
 import pe.com.capacitacion.util.Constantes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -41,7 +42,11 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 		
 		@Autowired
 		private RestTemplateBuilder objTemplate;  
- 
+		  
+        @Autowired
+    	private Environment objVariablesEntorno;
+        
+        
 	   /**	
 	    * agregarDepartamentoService	
 	    * @param  departamento
@@ -372,7 +377,8 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 			    String vDnsOrganization = objConfigurationData02Param.getOrganization();  
 			   
 			    log.info( "vNombreServicio: [" + vNombreServicio + "], vValor_01: [" + vValor_01 + "], vNombres: [" + vNombres + "], vDni: [" + vDni + "]" ); 
-			    log.info( "vDnsEmployee: [" + vDnsEmployee + "], vDnsDepartment: [" + vDnsDepartment + "], vDnsOrganization: [" + vDnsOrganization + "]" ); 
+			    log.info( "vDnsEmployee: [" + vDnsEmployee + "], vDnsDepartment: [" + vDnsDepartment + "], vDnsOrganization: [" + vDnsOrganization + "]" );  
+			    log.info( "ORACLE_USUARIO: [" + this.objVariablesEntorno.getProperty( "ORACLE_USUARIO" ) + "],  ORACLE_PASSWORD: [" + this.objVariablesEntorno.getProperty( "ORACLE_PASSWORD" ) + "]" );    
         }
         
  }
