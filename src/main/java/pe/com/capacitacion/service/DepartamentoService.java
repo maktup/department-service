@@ -8,6 +8,8 @@ import pe.com.capacitacion.bean.Auditoria;
 import pe.com.capacitacion.util.Constantes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,8 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import pe.com.capacitacion.bean.Departamento;
 import pe.com.capacitacion.dto.ResponseDepMsg; 
 import pe.com.capacitacion.exception.AuditoriaException;
-import pe.com.capacitacion.properties.ConfigurationData_01;
-import pe.com.capacitacion.properties.ConfigurationData_02;
+import pe.com.capacitacion.properties.ConfigurationData_01; 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand; 
 
 /**
@@ -36,13 +37,13 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 		
 		@Autowired
 		private ConfigurationData_01 objConfigurationData01;  //ACCESO: inicia con [grupoconfig01]  		 
-	  		
-		@Autowired
-		private ConfigurationData_02 objConfigurationData02;  //ACCESO: inicia con [grupoconfig02] 
-		
+ 
 		@Autowired
 		private RestTemplateBuilder objTemplate;  
 		  
+        @Autowired
+        private DiscoveryClient discoveryClient;
+		
         @Autowired
     	private Environment objVariablesEntorno;
         
@@ -56,17 +57,22 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 		public ResponseEntity<ResponseDepMsg> agregarDepartamentoService( Departamento departamento ){
 			   log.info( "-----> Departamento 'agregarDepartamentoService': {}", departamento );
 			   
-			   Gson   objGson = new Gson();
-			   String vURI    = "/departamentos";
+			   Gson         objGson   = new Gson();
+			   String       vURI      = "/departamentos";
+			   RestTemplate objRspTmp = this.objTemplate.build(); 
 			   
 			   //Variables de Entorno: 
-			   this.mostrarVariablesEntorno( this.constantes, this.objConfigurationData01, this.objConfigurationData02 );
+			   this.mostrarVariablesEntorno( this.constantes, this.objConfigurationData01 ); 
 			    
-			   RestTemplate objRspTmp = this.objTemplate.build(); 
-		 	   
+			   //Obtener el HOST del POD donde está ubicado el 'MICROSERVICIO'. 
+			   ServiceInstance objServiceInstance = this.discoveryClient.getInstances( Constantes.INSTANCIA_KUBERNETES_04 ).get( 0 );
+			   
+			   String vHostKubernetes = objServiceInstance.getUri() + ""; 
+			   log.info( "-----> vHostKubernetes: [" + objServiceInstance.getUri() + "]" );
+			   
 			   //Armando URI: 
-			   String vURL01 = (this.constantes.ingressUtiCapadb + "/" + Constantes.SERVICE_NAME_04 + "/" + Constantes.HTTP_METHOD_02 + vURI); 
-			   log.info( "========>: vURL01 [" + vURL01 + "]" );
+			   String vURL = (vHostKubernetes + "/" + Constantes.SERVICE_NAME_04 + "/" + Constantes.HTTP_METHOD_02 + vURI); 
+			   log.info( "========>: vURL [" + vURL + "]" );
 			   
 			   //Transformar de OBJETO a JSON:                                         
 			   String vParamRequestJSON = objGson.toJson( departamento );
@@ -78,7 +84,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 			   HttpEntity<Object> objEntityRequest = new HttpEntity<Object>( departamento, objHeader ); 
 			   
 			   //Enviar mensaje POST: 
-			   ResponseEntity<String> vCadenaJSON_01 = objRspTmp.postForEntity( vURL01, objEntityRequest, String.class );
+			   ResponseEntity<String> vCadenaJSON_01 = objRspTmp.postForEntity( vURL, objEntityRequest, String.class );
 			   log.info( "========>: vCadenaJSON_01 [" + vCadenaJSON_01.getBody() + "]" );
 			    
 			   //Transformar de JSON a OBJETO:   
@@ -99,19 +105,24 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 		public ResponseEntity<ResponseDepMsg> eliminarDepartamentoService( Long id ){ 
 			   log.info( "-----> Departamento 'eliminarDepartamentoService': {}", id );
 		 
-			   String vURI = "/departamentos/";
+			   String       vURI      = "/departamentos/";
+			   RestTemplate objRspTmp = this.objTemplate.build(); 
 			   
 			   //Variables de Entorno: 
-			   this.mostrarVariablesEntorno( this.constantes, this.objConfigurationData01, this.objConfigurationData02 );
+			   this.mostrarVariablesEntorno( this.constantes, this.objConfigurationData01 ); 
 			    
-			   RestTemplate objRspTmp = this.objTemplate.build(); 
-		       
+			   //Obtener el HOST del POD donde está ubicado el 'MICROSERVICIO'. 
+			   ServiceInstance objServiceInstance = this.discoveryClient.getInstances( Constantes.INSTANCIA_KUBERNETES_04 ).get( 0 );
+			   
+			   String vHostKubernetes = objServiceInstance.getUri() + ""; 
+			   log.info( "-----> vHostKubernetes: [" + objServiceInstance.getUri() + "]" );
+			   
 			   //Armando URI: 
-			   String vURL01 = (this.constantes.ingressUtiCapadb + "/" + Constantes.SERVICE_NAME_04 + "/" + Constantes.HTTP_METHOD_03 + vURI + id); 
-			   log.info( "========>: vURL01 [" + vURL01 + "]" );
+			   String vURL = (vHostKubernetes + "/" + Constantes.SERVICE_NAME_04 + "/" + Constantes.HTTP_METHOD_03 + vURI + id); 
+			   log.info( "========>: vURL [" + vURL + "]" );
 			   
 			   //Enviar mensaje DELETE: 
-			   objRspTmp.delete( vURL01 );  //Es VOID. 
+			   objRspTmp.delete( vURL );  //Es VOID. 
                
 			   //Armando estructura RESPONSE: 
 			   Auditoria      objAuditoria      = super.cargarDatosAuditoria( Constantes.IP_APP_NOK, Constantes.MSJ_APP_OK, Constantes.USUARIO_APP_NOK, Constantes.MSJ_APP_OK ); 
@@ -131,18 +142,24 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 		public ResponseEntity<ResponseDepMsg> consultarDepartamentosAllService(){ 
 			   log.info( "-----> Departmento 'consultarDepartamentosAllService'" );
 			   
-			   Gson   objGson = new Gson();
-			   String vURI_01 = "/departamentos";
-			   String vURI_02 = "/empleados/";
+			   Gson         objGson   = new Gson();
+			   String       vURI_01   = "/departamentos";
+			   String       vURI_02   = "/empleados/";
+			   RestTemplate objRspTmp = this.objTemplate.build(); 
 			   
 			   //Variables de Entorno: 
-			   this.mostrarVariablesEntorno( this.constantes, this.objConfigurationData01, this.objConfigurationData02 );
+			   this.mostrarVariablesEntorno( this.constantes, this.objConfigurationData01 ); 
 			   
-			   RestTemplate objRspTmp = this.objTemplate.build(); 
+			   //Obtener el HOST del POD donde está ubicado el 'MICROSERVICIO'. 
+			   ServiceInstance objServiceInstance = this.discoveryClient.getInstances( Constantes.INSTANCIA_KUBERNETES_04 ).get( 0 );
+			   
+			   String vHostKubernetes = objServiceInstance.getUri() + ""; 
+			   log.info( "-----> vHostKubernetes: [" + objServiceInstance.getUri() + "]" );
+			   
                
 			   //----------------------------------------------------------- [UTL-CAPADB] -----------------------------------------------------------// 
 			   //Armando URI:
-			   String vURL01 = (this.constantes.ingressUtiCapadb + "/" + Constantes.SERVICE_NAME_04 + "/" + Constantes.HTTP_METHOD_01 + vURI_01); 
+			   String vURL01 = (vHostKubernetes + "/" + Constantes.SERVICE_NAME_04 + "/" + Constantes.HTTP_METHOD_01 + vURI_01); 
 			   log.info( "========>: vURL01 [" + vURL01 + "]" );
 			   
 			   //Enviar mensaje GET: 
@@ -166,9 +183,15 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 					     objDepartamento = listaDepartamentos.get( i );
 					     idDep           = objDepartamento.getId().intValue(); 
 					   
-					     //----------------------------------------------------------- [EMPLOYEE-SERVICE] -----------------------------------------------------------//  
+					     //-------------------------------------------------------- [EMPLOYEE-SERVICE] --------------------------------------------------------//  					   
+					     //Obtener el HOST del POD donde está ubicado el 'MICROSERVICIO'. 
+					     objServiceInstance = this.discoveryClient.getInstances( Constantes.INSTANCIA_KUBERNETES_02 ).get( 0 );
+					   
+					     vHostKubernetes = objServiceInstance.getUri() + ""; 
+					     log.info( "-----> vHostKubernetes: [" + objServiceInstance.getUri() + "]" );
+					     
 					     //Armando URI:
-					     String vURL02 = (this.constantes.ingressEmployee + "/" + Constantes.SERVICE_NAME_02 + "/" + Constantes.HTTP_METHOD_01 + vURI_02 + idDep); 
+					     String vURL02 = (vHostKubernetes + "/" + Constantes.SERVICE_NAME_02 + "/" + Constantes.HTTP_METHOD_01 + vURI_02 + idDep); 
 					     log.info( "========>: vURL02 [" + vURL02 + "]" );
 					   
 					     //Enviar mensaje GET: 
@@ -210,18 +233,24 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 		public ResponseEntity<ResponseDepMsg> consultarDepartamentosPorIdService( Long id ){ 
 			   log.info( "-----> Departamento 'consultarDepartamentosPorIdService': id={}", id );
 			   
-			   Gson   objGson = new Gson();
-			   String vURI_01 = "/departamentos/";
-			   String vURI_02 = "/empleados/";
+			   Gson         objGson   = new Gson();
+			   String       vURI_01   = "/departamentos/";
+			   String       vURI_02   = "/empleados/";
+			   RestTemplate objRspTmp = this.objTemplate.build();  
 			   
 			   //Variables de Entorno: 
-			   this.mostrarVariablesEntorno( this.constantes, this.objConfigurationData01, this.objConfigurationData02 );
+			   this.mostrarVariablesEntorno( this.constantes, this.objConfigurationData01 ); 
 			   
-			   RestTemplate objRspTmp = this.objTemplate.build();  
+			   //Obtener el HOST del POD donde está ubicado el 'MICROSERVICIO'. 
+			   ServiceInstance objServiceInstance = this.discoveryClient.getInstances( Constantes.INSTANCIA_KUBERNETES_04 ).get( 0 );
+			   
+			   String vHostKubernetes = objServiceInstance.getUri() + ""; 
+			   log.info( "-----> vHostKubernetes: [" + objServiceInstance.getUri() + "]" );
+			   
 			   
 			   //----------------------------------------------------------- [UTL-CAPADB] -----------------------------------------------------------// 
 			   //Armando URI:
-			   String vURL01 = (this.constantes.ingressUtiCapadb + "/" + Constantes.SERVICE_NAME_04 + "/" + Constantes.HTTP_METHOD_01 + vURI_01 + id); 
+			   String vURL01 = (vHostKubernetes + "/" + Constantes.SERVICE_NAME_04 + "/" + Constantes.HTTP_METHOD_01 + vURI_01 + id); 
 			   log.info( "========>: vURL01 [" + vURL01 + "]" );
 			   
 			   //Enviar mensaje GET:
@@ -245,9 +274,15 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 					     objDepartamento = listaDepartamentos.get( i );
 					     idDep           = objDepartamento.getId().intValue(); 
 					   
-					     //------------------------------------------------------- [EMPLOYEE-SERVICE] -------------------------------------------------------// 
+					     //------------------------------------------------------- [EMPLOYEE-SERVICE] -------------------------------------------------------// 					     
+					     //Obtener el HOST del POD donde está ubicado el 'MICROSERVICIO'. 
+					     objServiceInstance = this.discoveryClient.getInstances( Constantes.INSTANCIA_KUBERNETES_04 ).get( 0 );
+					   
+					     vHostKubernetes = objServiceInstance.getUri() + ""; 
+					     log.info( "-----> vHostKubernetes: [" + objServiceInstance.getUri() + "]" );
+						   
 					     //Armando URI:
-					     String vURL02 = (this.constantes.ingressEmployee + "/" + Constantes.SERVICE_NAME_02 + "/" + Constantes.HTTP_METHOD_01 + vURI_02 + idDep); 
+					     String vURL02 = (vHostKubernetes + "/" + Constantes.SERVICE_NAME_02 + "/" + Constantes.HTTP_METHOD_01 + vURI_02 + idDep); 
 					     log.info( "========>: vURL02 [" + vURL02 + "]" );
 					   
 					     //Enviar mensaje GET:
@@ -289,18 +324,24 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 		public ResponseEntity<ResponseDepMsg> consultarDepartamentosPorOrganizacionService( Long idOrg ){ 
 			   log.info( "-----> Departamento 'consultarDepartamentosPorOrganizacionService': id={}", idOrg );
 			   
-			   Gson   objGson = new Gson();
-			   String vURI_01 = "/departamentos-organizacion/";
-			   String vURI_02 = "/empleados/";
+			   Gson         objGson   = new Gson();
+			   String       vURI_01   = "/departamentos-organizacion/";
+			   String       vURI_02   = "/empleados/";
+			   RestTemplate objRspTmp = this.objTemplate.build(); 
 			   
 			   //Variables de Entorno: 
-			   this.mostrarVariablesEntorno( this.constantes, this.objConfigurationData01, this.objConfigurationData02 );
+			   this.mostrarVariablesEntorno( this.constantes, this.objConfigurationData01 ); 
 			  
-			   RestTemplate objRspTmp = this.objTemplate.build(); 
-	 
+			   //Obtener el HOST del POD donde está ubicado el 'MICROSERVICIO'. 
+			   ServiceInstance objServiceInstance = this.discoveryClient.getInstances( Constantes.INSTANCIA_KUBERNETES_04 ).get( 0 );
+			   
+			   String vHostKubernetes = objServiceInstance.getUri() + ""; 
+			   log.info( "-----> vHostKubernetes: [" + objServiceInstance.getUri() + "]" );
+			   
+			   
 			   //----------------------------------------------------------- [UTL-CAPADB] -----------------------------------------------------------//  
 			   //Armando URI:
-			   String vURL01 = (this.constantes.ingressUtiCapadb + "/" + Constantes.SERVICE_NAME_04 + "/" + Constantes.HTTP_METHOD_01 + vURI_01 + idOrg); 
+			   String vURL01 = (vHostKubernetes + "/" + Constantes.SERVICE_NAME_04 + "/" + Constantes.HTTP_METHOD_01 + vURI_01 + idOrg); 
 			   log.info( "========>: vURL01 [" + vURL01 + "]" );
 			   
 			   //Enviar mensaje GET:
@@ -325,8 +366,14 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 					     idDep           = objDepartamento.getId().intValue(); 
 					   
 					     //-------------------------------------------------------- [EMPLOYEE-SERVICE] -------------------------------------------------------//  
+					     //Obtener el HOST del POD donde está ubicado el 'MICROSERVICIO'. 
+					     objServiceInstance = this.discoveryClient.getInstances( Constantes.INSTANCIA_KUBERNETES_02 ).get( 0 );
+					   
+					     vHostKubernetes = objServiceInstance.getUri() + ""; 
+					     log.info( "-----> vHostKubernetes: [" + objServiceInstance.getUri() + "]" );
+						   
 					     //Armando URI:
-					     String vURL02 = (this.constantes.ingressEmployee + "/" + Constantes.SERVICE_NAME_02 + "/" + Constantes.HTTP_METHOD_01 + vURI_02 + idDep); 
+					     String vURL02 = (vHostKubernetes + "/" + Constantes.SERVICE_NAME_02 + "/" + Constantes.HTTP_METHOD_01 + vURI_02 + idDep); 
 					     log.info( "========>: vURL02 [" + vURL02 + "]" );
 					   
 					     //Enviar mensaje GET:
@@ -362,22 +409,17 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 	   /**
 	    * mostrarVariablesEntorno
 	    * @param constantesParam
-	    * @param objConfigurationData01Param
-	    * @param objConfigurationData02Param
+	    * @param objConfigurationData01Param 
 	    **/
-        private void mostrarVariablesEntorno( Constantes constantesParam, ConfigurationData_01 objConfigurationData01Param, ConfigurationData_02 objConfigurationData02Param ){ 
+        private void mostrarVariablesEntorno( Constantes constantesParam, ConfigurationData_01 objConfigurationData01Param ){ 
         	    log.info( "-----> Departamento 'mostrarVariablesEntorno'" );
         	    
 			    String vNombreServicio  = constantesParam.nombreServicio; 
 			    String vValor_01        = constantesParam.valor01; 
 			    String vNombres         = objConfigurationData01Param.getNombres();
 			    String vDni             = objConfigurationData01Param.getDni(); 		
-			    String vDnsEmployee     = objConfigurationData02Param.getEmployee(); 
-			    String vDnsDepartment   = objConfigurationData02Param.getDepartment(); 
-			    String vDnsOrganization = objConfigurationData02Param.getOrganization();  
-			   
+ 
 			    log.info( "vNombreServicio: [" + vNombreServicio + "], vValor_01: [" + vValor_01 + "], vNombres: [" + vNombres + "], vDni: [" + vDni + "]" ); 
-			    log.info( "vDnsEmployee: [" + vDnsEmployee + "], vDnsDepartment: [" + vDnsDepartment + "], vDnsOrganization: [" + vDnsOrganization + "]" );  
 			    log.info( "BOOTADMIN_USUARIO: [" + this.objVariablesEntorno.getProperty( "BOOTADMIN_USUARIO" ) + "], BOOTADMIN_PASSWORD: [" + this.objVariablesEntorno.getProperty( "BOOTADMIN_PASSWORD" ) + "]" );    
         }
         

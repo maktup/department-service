@@ -8,7 +8,8 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication; 
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean; 
@@ -30,8 +31,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  @EnableHystrix             //IMPORTANTE: 'HYSTRIX' 
  @EnableFeignClients        //IMPORTANTE: 'FEIGN CLIENT'
  @EnableSwagger2            //IMPORTANTE: 'SWAGGER' 
+ @EnableDiscoveryClient     //IMPORTANTE: Descubrimiento por 'KUBERNETES'. 
  public class MainApp{
-	
+ 
 		@Autowired
 		private Constantes constantes; 
 	 
