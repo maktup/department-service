@@ -276,7 +276,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 					   
 					     //------------------------------------------------------- [EMPLOYEE-SERVICE] -------------------------------------------------------// 					     
 					     //Obtener el HOST del POD donde está ubicado el 'MICROSERVICIO'. 
-					     objServiceInstance = this.discoveryClient.getInstances( Constantes.INSTANCIA_KUBERNETES_04 ).get( 0 );
+					     objServiceInstance = this.discoveryClient.getInstances( Constantes.INSTANCIA_KUBERNETES_02 ).get( 0 );
 					   
 					     vHostKubernetes = objServiceInstance.getUri() + ""; 
 					     log.info( "-----> vHostKubernetes: [" + objServiceInstance.getUri() + "]" );
