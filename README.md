@@ -2,30 +2,63 @@
 
 IMPORTANTE:
 ----------
-- CONSIDERAR que los DNS, deben estar registrados en el archivo HOST del S.O. 
-- El 'ARCHIVO DE CONFIGURACION' para el MICROSERVICIO: 'department-service', se manejara configurara dentro del SCRIPT: [3_department-service_[Deployment].yml] 
-- Dentro del archivo: 'DOCKERFILE' se estan manejando 'VARIABLES DE ENTORNO' para algunas configuraciones.  
+* CONSIDERAR que los DNS, deben estar registrados en el archivo HOST del S.O (Las IPs manejadas deben de ser FIJAS). 
+* La 'ARCHIVO DE CONFIGURACION' para el MICROSERVICIO: 'department-service', se manejara por medio de los SCRIPTs:
+
+  - 1_department-service_[ConfigMap-Secret].yml
+  - 2_department-service_[Deployment-Service].yml
+  
+* Dentro del SCRIPT: 'DOCKERFILE' se estan manejando tambien 'VARIABLES DE ENTORNO' para algunos requerimientos en el MICROSERVICIO.  
 
 
-Los LINKs [GET] son:
+SWAGGER:
+--------
+CREAR EL 'CONTRADO/API' ONLINE USANDO:
+http://editor.swagger.io/
 
-1. consultarDepartamentosAll: [http://capacitacion.microservicios.department/departmentservice/get/departamentos]
-   http://capacitacion.microservicios.department/departmentservice/get/departamentos
+UNA VEZ DESPLEGADO EL 'MICROSERVICIO' ACCEDER A:  
+http://capacitacion.microservicios.department/swagger-ui.html
 
-2. consultarDepartamentosPorId: [http://capacitacion.microservicios.department/departmentservice/get/departamentos/{id}]  
-   http://capacitacion.microservicios.department/departmentservice/get/departamentos/1
-   
-3. consultarDepartamentosPorOrganizacion: [http://capacitacion.microservicios.department/departmentservice/get/organizaciones/{organizationId}/departamentos]   
-   http://capacitacion.microservicios.department/departmentservice/get/organizaciones/1/departamentos
 
-4. consultarDepartamentosConEmpleadosPorOrganizacion: [http://capacitacion.microservicios.department/departmentservice/get/organizaciones/{organizationId}/departamentos/empleados]   
-   http://capacitacion.microservicios.department/departmentservice/get/organizaciones/1/departamentos/empleados 
+Los LINKs del 'MICROSERVICIO' son:
+---------------------------------
+
+  1. Las 'URI' de tipo [GET] son:
+     ---------------------------
+  
+     - consultardepartamentosAll: 
+	   http://capacitacion.microservicios.department/departmentservice/get/departamentos
+	
+     - consultardepartamentosPorId:   
+	   http://capacitacion.microservicios.department/departmentservice/get/departamentos/1
+	                                                                  
+     - consultardepartamentosPorDepartamento:   
+	   http://capacitacion.microservicios.department/departmentservice/get/departamentos-organizacion/1
+ 
+ 
+  2. Las 'URI' de tipo [POST] son:
+     ----------------------------
+     
+     - agregarDepartamento:   
+	   http://capacitacion.microservicios.department/departmentservice/post/departamentos
+ 
+	   {    
+		 "nombre": "RRHH",  
+		  
+	     "idOrg":  "1" 
+	   }
+ 
+ 
+  3. Las 'URI' de tipo [DELETE] son:
+     ------------------------------
+ 
+     - eliminarDepartamento:   
+	   http://capacitacion.microservicios.department/departmentservice/delete/departamentos/1
 
 
 DETALLE:
--------
-- Para DETALLES del MICROSERVICIO, apoyarse en ACTUATOR ingresando a: 'http://capacitacion.microservicios.department/actuator'
-
-- Para acceder a 'PHOMETHEUS' acceder por medio de ACTUATOR asi: 'http://capacitacion.microservicios.department/actuator/prometheus' 
+------- 
+* Para INFORMACIÓN interna del MICROSERVICIO, apoyarse en ACTUATOR ingresando a: 'http://capacitacion.microservicios.department/actuator'
+* Para acceder a 'PHOMETHEUS' acceder por medio de ACTUATOR asi: 'http://capacitacion.microservicios.department/actuator/prometheus'
 
  
