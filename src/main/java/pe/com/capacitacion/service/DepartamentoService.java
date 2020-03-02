@@ -23,9 +23,7 @@ import pe.com.capacitacion.dto.ResponseDepMsg;
 import pe.com.capacitacion.exception.AuditoriaException;
 import pe.com.capacitacion.properties.ConfigurationData_01; 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand; 
-import brave.Span;
-import brave.Tracer; 
-
+ 
 /**
  * DepartamentoService
  * @author cguerra
@@ -48,13 +46,7 @@ import brave.Tracer;
 		
         @Autowired
     	private Environment objVariablesEntorno;
-        
-       @Autowired
-       private Tracer objTracer;  
-       
-       @Autowired
-   	   private RestTemplate objRestTemplate; 
-        
+ 
        
 	   /**	
 	    * agregarDepartamentoService	
@@ -67,12 +59,8 @@ import brave.Tracer;
 			   
 			   Gson         objGson   = new Gson();
 			   String       vURI      = "/departamentos";
-			   this.objRestTemplate = this.objTemplate.build(); 
-			   
-			   //Zipkin: 
-			   Span objSpan = this.objTracer.nextSpan().name( "employee-service" );  
-			   objSpan.start();
-			   
+			   RestTemplate objRspTmp = this.objTemplate.build(); 
+	 
 			   //Variables de Entorno: 
 			   this.mostrarVariablesEntorno( this.constantes, this.objConfigurationData01 ); 
 			    
@@ -96,7 +84,7 @@ import brave.Tracer;
 			   HttpEntity<Object> objEntityRequest = new HttpEntity<Object>( departamento, objHeader ); 
 			   
 			   //Enviar mensaje POST: 
-			   ResponseEntity<String> vCadenaJSON_01 = this.objRestTemplate.postForEntity( vURL, objEntityRequest, String.class );
+			   ResponseEntity<String> vCadenaJSON_01 = objRspTmp.postForEntity( vURL, objEntityRequest, String.class );
 			   log.info( "========>: vCadenaJSON_01 [" + vCadenaJSON_01.getBody() + "]" );
 			    
 			   //Transformar de JSON a OBJETO:   
@@ -105,8 +93,7 @@ import brave.Tracer;
  
 			   //Objeto Return: 
 			   ResponseEntity<ResponseDepMsg> objRetorno = new ResponseEntity<ResponseDepMsg>( objResponseDepMsg, HttpStatus.OK ); 
-			   objSpan.finish();
-			   
+ 
 			   return objRetorno;
 		}
 	
@@ -120,12 +107,8 @@ import brave.Tracer;
 			   log.info( "-----> Departamento 'eliminarDepartamentoService': {}", id );
 		 
 			   String       vURI      = "/departamentos/";
-			   this.objRestTemplate = this.objTemplate.build(); 
-			   
-			   //Zipkin: 
-			   Span objSpan = this.objTracer.nextSpan().name( "employee-service" );  
-			   objSpan.start();
-			   
+			   RestTemplate objRspTmp = this.objTemplate.build(); 
+ 
 			   //Variables de Entorno: 
 			   this.mostrarVariablesEntorno( this.constantes, this.objConfigurationData01 ); 
 			    
@@ -140,7 +123,7 @@ import brave.Tracer;
 			   log.info( "========>: vURL [" + vURL + "]" );
 			   
 			   //Enviar mensaje DELETE: 
-			   this.objRestTemplate.delete( vURL );  //Es VOID. 
+			   objRspTmp.delete( vURL );  //Es VOID. 
                
 			   //Armando estructura RESPONSE: 
 			   Auditoria      objAuditoria      = super.cargarDatosAuditoria( Constantes.IP_APP_NOK, Constantes.MSJ_APP_OK, Constantes.USUARIO_APP_NOK, Constantes.MSJ_APP_OK ); 
@@ -149,8 +132,7 @@ import brave.Tracer;
 			 
 			   //Objeto Return: 
 			   ResponseEntity<ResponseDepMsg> objRetorno = new ResponseEntity<ResponseDepMsg>( objResponseDepMsg, HttpStatus.OK ); 
-			   objSpan.finish();
-			   
+ 
 			   return objRetorno;
 		}
 		
@@ -165,12 +147,8 @@ import brave.Tracer;
 			   Gson         objGson   = new Gson();
 			   String       vURI_01   = "/departamentos";
 			   String       vURI_02   = "/empleados/";
-			   this.objRestTemplate = this.objTemplate.build(); 
-			   
-			   //Zipkin: 
-			   Span objSpan = this.objTracer.nextSpan().name( "employee-service" );  
-			   objSpan.start();
-			   
+			   RestTemplate objRspTmp = this.objTemplate.build(); 
+ 
 			   //Variables de Entorno: 
 			   this.mostrarVariablesEntorno( this.constantes, this.objConfigurationData01 ); 
 			   
@@ -187,7 +165,7 @@ import brave.Tracer;
 			   log.info( "========>: vURL01 [" + vURL01 + "]" );
 			   
 			   //Enviar mensaje GET: 
-			   String vCadenaJSON_01 = this.objRestTemplate.getForObject( vURL01, String.class );
+			   String vCadenaJSON_01 = objRspTmp.getForObject( vURL01, String.class );
 			   log.info( "========>: vCadenaJSON_01 [" + vCadenaJSON_01 + "]" ); 
 			   
 			   //Transformar de JSON a OBJETO: 
@@ -219,7 +197,7 @@ import brave.Tracer;
 					     log.info( "========>: vURL02 [" + vURL02 + "]" );
 					   
 					     //Enviar mensaje GET: 
-					     String vCadenaJSON_02 = this.objRestTemplate.getForObject( vURL02, String.class );
+					     String vCadenaJSON_02 = objRspTmp.getForObject( vURL02, String.class );
 					     log.info( "========>: vCadenaJSON_02 [" + vCadenaJSON_02 + "]" ); 
 					   
 					     //Transformar de JSON a OBJETO: 
@@ -245,9 +223,8 @@ import brave.Tracer;
 			   
 			     //Objeto Return:
 			     ResponseEntity<ResponseDepMsg> objRetorno = new ResponseEntity<ResponseDepMsg>( objResponseDepMsg, HttpStatus.OK ); 
-			   objSpan.finish();
-			   
-			   return objRetorno;
+ 
+			     return objRetorno;
 		}
 				
 	   /**
@@ -262,12 +239,8 @@ import brave.Tracer;
 			   Gson         objGson   = new Gson();
 			   String       vURI_01   = "/departamentos/";
 			   String       vURI_02   = "/empleados/";
-			   this.objRestTemplate = this.objTemplate.build();  
-			   
-			   //Zipkin: 
-			   Span objSpan = this.objTracer.nextSpan().name( "employee-service" );  
-			   objSpan.start();
-			   
+			   RestTemplate objRspTmp = this.objTemplate.build(); 
+ 
 			   //Variables de Entorno: 
 			   this.mostrarVariablesEntorno( this.constantes, this.objConfigurationData01 ); 
 			   
@@ -284,7 +257,7 @@ import brave.Tracer;
 			   log.info( "========>: vURL01 [" + vURL01 + "]" );
 			   
 			   //Enviar mensaje GET:
-			   String vCadenaJSON_01 = this.objRestTemplate.getForObject( vURL01, String.class );
+			   String vCadenaJSON_01 = objRspTmp.getForObject( vURL01, String.class );
 			   log.info( "========>: vCadenaJSON_01 [" + vCadenaJSON_01 + "]" ); 
 			   
 			   //Transformar de JSON a OBJETO: 
@@ -316,7 +289,7 @@ import brave.Tracer;
 					     log.info( "========>: vURL02 [" + vURL02 + "]" );
 					   
 					     //Enviar mensaje GET:
-					     String vCadenaJSON_02 = this.objRestTemplate.getForObject( vURL02, String.class );
+					     String vCadenaJSON_02 = objRspTmp.getForObject( vURL02, String.class );
 					     log.info( "========>: vCadenaJSON_02 [" + vCadenaJSON_02 + "]" ); 
 					   
 					     //Transformar de JSON a OBJETO: 
@@ -342,9 +315,8 @@ import brave.Tracer;
 			    			   
 			    //Objeto Return:
 			    ResponseEntity<ResponseDepMsg> objRetorno = new ResponseEntity<ResponseDepMsg>( objResponseDepMsg, HttpStatus.OK ); 
-			   objSpan.finish();
-			   
-			   return objRetorno;
+ 
+			    return objRetorno;
 		}		
 			
 	   /**
@@ -359,12 +331,8 @@ import brave.Tracer;
 			   Gson         objGson   = new Gson();
 			   String       vURI_01   = "/departamentos-organizacion/";
 			   String       vURI_02   = "/empleados/";
-			   this.objRestTemplate = this.objTemplate.build(); 
-			   
-			   //Zipkin: 
-			   Span objSpan = this.objTracer.nextSpan().name( "employee-service" );  
-			   objSpan.start();
-			   
+			   RestTemplate objRspTmp = this.objTemplate.build(); 
+ 
 			   //Variables de Entorno: 
 			   this.mostrarVariablesEntorno( this.constantes, this.objConfigurationData01 ); 
 			  
@@ -381,7 +349,7 @@ import brave.Tracer;
 			   log.info( "========>: vURL01 [" + vURL01 + "]" );
 			   
 			   //Enviar mensaje GET:
-			   String vCadenaJSON_01 = this.objRestTemplate.getForObject( vURL01, String.class );
+			   String vCadenaJSON_01 = objRspTmp.getForObject( vURL01, String.class );
 			   log.info( "========>: vCadenaJSON_01 [" + vCadenaJSON_01 + "]" ); 
 			   
 			   //Transformar de JSON a OBJETO:  	
@@ -413,7 +381,7 @@ import brave.Tracer;
 					     log.info( "========>: vURL02 [" + vURL02 + "]" );
 					   
 					     //Enviar mensaje GET:
-					     String vCadenaJSON_02 = this.objRestTemplate.getForObject( vURL02, String.class );
+					     String vCadenaJSON_02 = objRspTmp.getForObject( vURL02, String.class );
 					     log.info( "========>: vCadenaJSON_02 [" + vCadenaJSON_02 + "]" ); 
 					   
 					     //Transformar de JSON a OBJETO: 	
@@ -439,8 +407,7 @@ import brave.Tracer;
 			      
 			    //Objeto Return:
 			    ResponseEntity<ResponseDepMsg> objRetorno = new ResponseEntity<ResponseDepMsg>( objResponseDepMsg, HttpStatus.OK ); 
-			    objSpan.finish();
-			   
+ 
 			    return objRetorno;
 		}
  		 
