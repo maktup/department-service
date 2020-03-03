@@ -46,7 +46,10 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 		
         @Autowired
     	private Environment objVariablesEntorno;
- 
+        
+        @Autowired
+        private io.opentracing.Tracer jaegerAlertTracer; 
+        
        
 	   /**	
 	    * agregarDepartamentoService	
@@ -56,6 +59,8 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 		@HystrixCommand( fallbackMethod = "lanzarExceptionWS" )   //ANTE UNA FALLA LANZARPA EL MÉTODO: [lanzarExceptionWS].
 		public ResponseEntity<ResponseDepMsg> agregarDepartamentoService( Departamento departamento ){
 			   log.info( "-----> Departamento 'agregarDepartamentoService': {}", departamento );
+			   
+			   io.opentracing.Scope objJaegerNombreOperacion = this.jaegerAlertTracer.buildSpan( "[agregarDepartamentoService]" ).startActive( true ); 
 			   
 			   Gson         objGson   = new Gson();
 			   String       vURI      = "/departamentos";
@@ -83,10 +88,14 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 			   objHeader.setContentType( MediaType.APPLICATION_JSON );		 
 			   HttpEntity<Object> objEntityRequest = new HttpEntity<Object>( departamento, objHeader ); 
 			   
+			   //Agente JAEGER:  
+			   io.opentracing.Span objJaegerServicioHijo_01 = this.jaegerAlertTracer.buildSpan( "[utl-capadb]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
+			   
 			   //Enviar mensaje POST: 
 			   ResponseEntity<String> vCadenaJSON_01 = objRspTmp.postForEntity( vURL, objEntityRequest, String.class );
 			   log.info( "========>: vCadenaJSON_01 [" + vCadenaJSON_01.getBody() + "]" );
-			    
+			   objJaegerServicioHijo_01.finish();			   
+			   
 			   //Transformar de JSON a OBJETO:   
 			   pe.com.capacitacion.dto.ResponseDepMsg objResponseDepMsg = objGson.fromJson( vCadenaJSON_01.getBody(), pe.com.capacitacion.dto.ResponseDepMsg.class );
 			   log.info( "========>: ResponseDepMsg: " + objResponseDepMsg ); 
@@ -94,7 +103,8 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 			   //Objeto Return: 
 			   ResponseEntity<ResponseDepMsg> objRetorno = new ResponseEntity<ResponseDepMsg>( objResponseDepMsg, HttpStatus.OK ); 
  
-			   return objRetorno;
+			   objJaegerNombreOperacion.close(); 
+			   return objRetorno;	 
 		}
 	
 	   /**	
@@ -106,6 +116,8 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 		public ResponseEntity<ResponseDepMsg> eliminarDepartamentoService( Long id ){ 
 			   log.info( "-----> Departamento 'eliminarDepartamentoService': {}", id );
 		 
+			   io.opentracing.Scope objJaegerNombreOperacion = this.jaegerAlertTracer.buildSpan( "[eliminarDepartamentoService]" ).startActive( true ); 
+			   
 			   String       vURI      = "/departamentos/";
 			   RestTemplate objRspTmp = this.objTemplate.build(); 
  
@@ -122,9 +134,15 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 			   String vURL = (vHostKubernetes + "/" + Constantes.SERVICE_NAME_04 + "/" + Constantes.HTTP_METHOD_03 + vURI + id); 
 			   log.info( "========>: vURL [" + vURL + "]" );
 			   
+			   
+			   //Agente JAEGER:  
+			   io.opentracing.Span objJaegerServicioHijo_01 = this.jaegerAlertTracer.buildSpan( "[utl-capadb]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
+			   
 			   //Enviar mensaje DELETE: 
 			   objRspTmp.delete( vURL );  //Es VOID. 
-               
+			   
+			   objJaegerServicioHijo_01.finish();
+			   
 			   //Armando estructura RESPONSE: 
 			   Auditoria      objAuditoria      = super.cargarDatosAuditoria( Constantes.IP_APP_NOK, Constantes.MSJ_APP_OK, Constantes.USUARIO_APP_NOK, Constantes.MSJ_APP_OK ); 
 			   ResponseDepMsg objResponseDepMsg = new ResponseDepMsg();
@@ -133,7 +151,8 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 			   //Objeto Return: 
 			   ResponseEntity<ResponseDepMsg> objRetorno = new ResponseEntity<ResponseDepMsg>( objResponseDepMsg, HttpStatus.OK ); 
  
-			   return objRetorno;
+			   objJaegerNombreOperacion.close(); 
+			   return objRetorno;	 
 		}
 		
 	   /**
@@ -143,6 +162,8 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 		@HystrixCommand( fallbackMethod = "lanzarListaExceptionWS" )   //ANTE UNA FALLA LANZARPA EL MÉTODO: [lanzarListaExceptionWS].
 		public ResponseEntity<ResponseDepMsg> consultarDepartamentosAllService(){ 
 			   log.info( "-----> Departmento 'consultarDepartamentosAllService'" );
+			   
+               io.opentracing.Scope objJaegerNombreOperacion = this.jaegerAlertTracer.buildSpan( "[consultarDepartamentosAllService]" ).startActive( true ); 
 			   
 			   Gson         objGson   = new Gson();
 			   String       vURI_01   = "/departamentos";
@@ -164,9 +185,13 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 			   String vURL01 = (vHostKubernetes + "/" + Constantes.SERVICE_NAME_04 + "/" + Constantes.HTTP_METHOD_01 + vURI_01); 
 			   log.info( "========>: vURL01 [" + vURL01 + "]" );
 			   
+			   //Agente JAEGER:  
+			   io.opentracing.Span objJaegerServicioHijo_01 = this.jaegerAlertTracer.buildSpan( "[utl-capadb]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
+			   
 			   //Enviar mensaje GET: 
 			   String vCadenaJSON_01 = objRspTmp.getForObject( vURL01, String.class );
 			   log.info( "========>: vCadenaJSON_01 [" + vCadenaJSON_01 + "]" ); 
+			   objJaegerServicioHijo_01.finish();
 			   
 			   //Transformar de JSON a OBJETO: 
 			   pe.com.capacitacion.dto.ResponseDepMsg objResponseDepMsg = objGson.fromJson( vCadenaJSON_01, pe.com.capacitacion.dto.ResponseDepMsg.class );
@@ -196,10 +221,15 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 					     String vURL02 = (vHostKubernetes + "/" + Constantes.SERVICE_NAME_02 + "/" + Constantes.HTTP_METHOD_01 + vURI_02 + idDep); 
 					     log.info( "========>: vURL02 [" + vURL02 + "]" );
 					   
+					     
+						 //Agente JAEGER:  
+						 io.opentracing.Span objJaegerServicioHijo_02 = this.jaegerAlertTracer.buildSpan( "[employee-service]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
+					     
 					     //Enviar mensaje GET: 
 					     String vCadenaJSON_02 = objRspTmp.getForObject( vURL02, String.class );
 					     log.info( "========>: vCadenaJSON_02 [" + vCadenaJSON_02 + "]" ); 
-					   
+						 objJaegerServicioHijo_02.finish();
+						   
 					     //Transformar de JSON a OBJETO: 
 					     pe.com.capacitacion.dto.ResponseEmplMsg objResponseEmpMsg = objGson.fromJson( vCadenaJSON_02, pe.com.capacitacion.dto.ResponseEmplMsg.class );
 					     log.info( "========>: objResponseEmpMsg: " + objResponseEmpMsg );  
@@ -224,7 +254,8 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 			     //Objeto Return:
 			     ResponseEntity<ResponseDepMsg> objRetorno = new ResponseEntity<ResponseDepMsg>( objResponseDepMsg, HttpStatus.OK ); 
  
-			     return objRetorno;
+			    objJaegerNombreOperacion.close(); 
+			    return objRetorno;	 
 		}
 				
 	   /**
@@ -235,6 +266,8 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 		@HystrixCommand( fallbackMethod = "lanzarExceptionWS" )   //ANTE UNA FALLA LANZARPA EL MÉTODO: [lanzarExceptionWS].
 		public ResponseEntity<ResponseDepMsg> consultarDepartamentosPorIdService( Long id ){ 
 			   log.info( "-----> Departamento 'consultarDepartamentosPorIdService': id={}", id );
+			   
+               io.opentracing.Scope objJaegerNombreOperacion = this.jaegerAlertTracer.buildSpan( "[consultarDepartamentosPorIdService]" ).startActive( true ); 
 			   
 			   Gson         objGson   = new Gson();
 			   String       vURI_01   = "/departamentos/";
@@ -255,10 +288,14 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 			   //Armando URI:
 			   String vURL01 = (vHostKubernetes + "/" + Constantes.SERVICE_NAME_04 + "/" + Constantes.HTTP_METHOD_01 + vURI_01 + id); 
 			   log.info( "========>: vURL01 [" + vURL01 + "]" );
+			   			   
+			   //Agente JAEGER:  
+			   io.opentracing.Span objJaegerServicioHijo_01 = this.jaegerAlertTracer.buildSpan( "[utl-capadb]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
 			   
 			   //Enviar mensaje GET:
 			   String vCadenaJSON_01 = objRspTmp.getForObject( vURL01, String.class );
 			   log.info( "========>: vCadenaJSON_01 [" + vCadenaJSON_01 + "]" ); 
+			   objJaegerServicioHijo_01.finish();
 			   
 			   //Transformar de JSON a OBJETO: 
 			   pe.com.capacitacion.dto.ResponseDepMsg objResponseDepMsg = objGson.fromJson( vCadenaJSON_01, pe.com.capacitacion.dto.ResponseDepMsg.class );
@@ -288,10 +325,14 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 					     String vURL02 = (vHostKubernetes + "/" + Constantes.SERVICE_NAME_02 + "/" + Constantes.HTTP_METHOD_01 + vURI_02 + idDep); 
 					     log.info( "========>: vURL02 [" + vURL02 + "]" );
 					   
+						 //Agente JAEGER:  
+						 io.opentracing.Span objJaegerServicioHijo_02 = this.jaegerAlertTracer.buildSpan( "[employee-service]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
+					     
 					     //Enviar mensaje GET:
 					     String vCadenaJSON_02 = objRspTmp.getForObject( vURL02, String.class );
 					     log.info( "========>: vCadenaJSON_02 [" + vCadenaJSON_02 + "]" ); 
-					   
+						 objJaegerServicioHijo_02.finish();
+						 
 					     //Transformar de JSON a OBJETO: 
 					     pe.com.capacitacion.dto.ResponseEmplMsg objResponseEmpMsg = objGson.fromJson( vCadenaJSON_02, pe.com.capacitacion.dto.ResponseEmplMsg.class );
 					     log.info( "========>: objResponseEmpMsg: " + objResponseEmpMsg );  
@@ -316,7 +357,8 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 			    //Objeto Return:
 			    ResponseEntity<ResponseDepMsg> objRetorno = new ResponseEntity<ResponseDepMsg>( objResponseDepMsg, HttpStatus.OK ); 
  
-			    return objRetorno;
+			   objJaegerNombreOperacion.close(); 
+			   return objRetorno;	 
 		}		
 			
 	   /**
@@ -327,6 +369,8 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 		@HystrixCommand( fallbackMethod = "lanzarListaExceptionWS" )   //ANTE UNA FALLA LANZARPA EL MÉTODO: [lanzarListaExceptionWS].
 		public ResponseEntity<ResponseDepMsg> consultarDepartamentosPorOrganizacionService( Long idOrg ){ 
 			   log.info( "-----> Departamento 'consultarDepartamentosPorOrganizacionService': id={}", idOrg );
+			   
+               io.opentracing.Scope objJaegerNombreOperacion = this.jaegerAlertTracer.buildSpan( "[consultarDepartamentosPorOrganizacionService]" ).startActive( true );
 			   
 			   Gson         objGson   = new Gson();
 			   String       vURI_01   = "/departamentos-organizacion/";
@@ -348,9 +392,13 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 			   String vURL01 = (vHostKubernetes + "/" + Constantes.SERVICE_NAME_04 + "/" + Constantes.HTTP_METHOD_01 + vURI_01 + idOrg); 
 			   log.info( "========>: vURL01 [" + vURL01 + "]" );
 			   
+			   //Agente JAEGER:  
+			   io.opentracing.Span objJaegerServicioHijo_01 = this.jaegerAlertTracer.buildSpan( "[utl-capadb]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
+			   
 			   //Enviar mensaje GET:
 			   String vCadenaJSON_01 = objRspTmp.getForObject( vURL01, String.class );
 			   log.info( "========>: vCadenaJSON_01 [" + vCadenaJSON_01 + "]" ); 
+			   objJaegerServicioHijo_01.finish();
 			   
 			   //Transformar de JSON a OBJETO:  	
 			   pe.com.capacitacion.dto.ResponseDepMsg objResponseDepMsg = objGson.fromJson( vCadenaJSON_01, pe.com.capacitacion.dto.ResponseDepMsg.class );
@@ -380,10 +428,14 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 					     String vURL02 = (vHostKubernetes + "/" + Constantes.SERVICE_NAME_02 + "/" + Constantes.HTTP_METHOD_01 + vURI_02 + idDep); 
 					     log.info( "========>: vURL02 [" + vURL02 + "]" );
 					   
+						 //Agente JAEGER:  
+						 io.opentracing.Span objJaegerServicioHijo_02 = this.jaegerAlertTracer.buildSpan( "[employee-service]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
+					     
 					     //Enviar mensaje GET:
 					     String vCadenaJSON_02 = objRspTmp.getForObject( vURL02, String.class );
 					     log.info( "========>: vCadenaJSON_02 [" + vCadenaJSON_02 + "]" ); 
-					   
+						 objJaegerServicioHijo_02.finish();
+						   
 					     //Transformar de JSON a OBJETO: 	
 					     pe.com.capacitacion.dto.ResponseEmplMsg objResponseEmpMsg = objGson.fromJson( vCadenaJSON_02, pe.com.capacitacion.dto.ResponseEmplMsg.class );
 					     log.info( "========>: objResponseEmpMsg: " + objResponseEmpMsg );  
@@ -408,8 +460,9 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 			    //Objeto Return:
 			    ResponseEntity<ResponseDepMsg> objRetorno = new ResponseEntity<ResponseDepMsg>( objResponseDepMsg, HttpStatus.OK ); 
  
-			    return objRetorno;
-		}
+			   objJaegerNombreOperacion.close(); 
+			   return objRetorno;	 
+		}	
  		 
 	   /**
 	    * mostrarVariablesEntorno
