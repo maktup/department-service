@@ -89,7 +89,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 			   HttpEntity<Object> objEntityRequest = new HttpEntity<Object>( departamento, objHeader ); 
 			   
 			   //Agente JAEGER:  
-			   io.opentracing.Span objJaegerServicioHijo_01 = this.jaegerAlertTracer.buildSpan( "[utl-capadb]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
+			   io.opentracing.Span objJaegerServicioHijo_01 = this.jaegerAlertTracer.buildSpan( "[" + Constantes.INSTANCIA_KUBERNETES_04 + "]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
 			   
 			   //Enviar mensaje POST: 
 			   ResponseEntity<String> vCadenaJSON_01 = objRspTmp.postForEntity( vURL, objEntityRequest, String.class );
@@ -136,7 +136,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 			   
 			   
 			   //Agente JAEGER:  
-			   io.opentracing.Span objJaegerServicioHijo_01 = this.jaegerAlertTracer.buildSpan( "[utl-capadb]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
+			   io.opentracing.Span objJaegerServicioHijo_01 = this.jaegerAlertTracer.buildSpan( "[" + Constantes.INSTANCIA_KUBERNETES_04 + "]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
 			   
 			   //Enviar mensaje DELETE: 
 			   objRspTmp.delete( vURL );  //Es VOID. 
@@ -186,7 +186,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 			   log.info( "========>: vURL01 [" + vURL01 + "]" );
 			   
 			   //Agente JAEGER:  
-			   io.opentracing.Span objJaegerServicioHijo_01 = this.jaegerAlertTracer.buildSpan( "[utl-capadb]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
+			   io.opentracing.Span objJaegerServicioHijo_01 = this.jaegerAlertTracer.buildSpan( "[" + Constantes.INSTANCIA_KUBERNETES_04 + "]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
 			   
 			   //Enviar mensaje GET: 
 			   String vCadenaJSON_01 = objRspTmp.getForObject( vURL01, String.class );
@@ -223,7 +223,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 					   
 					     
 						 //Agente JAEGER:  
-						 io.opentracing.Span objJaegerServicioHijo_02 = this.jaegerAlertTracer.buildSpan( "[employee-service]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
+						 io.opentracing.Span objJaegerServicioHijo_02 = this.jaegerAlertTracer.buildSpan( "[" + Constantes.INSTANCIA_KUBERNETES_02 + "]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
 					     
 					     //Enviar mensaje GET: 
 					     String vCadenaJSON_02 = objRspTmp.getForObject( vURL02, String.class );
@@ -290,7 +290,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 			   log.info( "========>: vURL01 [" + vURL01 + "]" );
 			   			   
 			   //Agente JAEGER:  
-			   io.opentracing.Span objJaegerServicioHijo_01 = this.jaegerAlertTracer.buildSpan( "[utl-capadb]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
+			   io.opentracing.Span objJaegerServicioHijo_01 = this.jaegerAlertTracer.buildSpan( "[" + Constantes.INSTANCIA_KUBERNETES_04 + "]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
 			   
 			   //Enviar mensaje GET:
 			   String vCadenaJSON_01 = objRspTmp.getForObject( vURL01, String.class );
@@ -326,7 +326,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 					     log.info( "========>: vURL02 [" + vURL02 + "]" );
 					   
 						 //Agente JAEGER:  
-						 io.opentracing.Span objJaegerServicioHijo_02 = this.jaegerAlertTracer.buildSpan( "[employee-service]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
+						 io.opentracing.Span objJaegerServicioHijo_02 = this.jaegerAlertTracer.buildSpan( "[" + Constantes.INSTANCIA_KUBERNETES_02 + "]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
 					     
 					     //Enviar mensaje GET:
 					     String vCadenaJSON_02 = objRspTmp.getForObject( vURL02, String.class );
@@ -393,7 +393,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 			   log.info( "========>: vURL01 [" + vURL01 + "]" );
 			   
 			   //Agente JAEGER:  
-			   io.opentracing.Span objJaegerServicioHijo_01 = this.jaegerAlertTracer.buildSpan( "[utl-capadb]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
+			   io.opentracing.Span objJaegerServicioHijo_01 = this.jaegerAlertTracer.buildSpan( "[" + Constantes.INSTANCIA_KUBERNETES_04 + "]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
 			   
 			   //Enviar mensaje GET:
 			   String vCadenaJSON_01 = objRspTmp.getForObject( vURL01, String.class );
@@ -429,7 +429,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 					     log.info( "========>: vURL02 [" + vURL02 + "]" );
 					   
 						 //Agente JAEGER:  
-						 io.opentracing.Span objJaegerServicioHijo_02 = this.jaegerAlertTracer.buildSpan( "[employee-service]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
+						 io.opentracing.Span objJaegerServicioHijo_02 = this.jaegerAlertTracer.buildSpan( "[" + Constantes.INSTANCIA_KUBERNETES_02 + "]" ).asChildOf( objJaegerNombreOperacion.span() ).start();
 					     
 					     //Enviar mensaje GET:
 					     String vCadenaJSON_02 = objRspTmp.getForObject( vURL02, String.class );
