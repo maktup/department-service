@@ -133,6 +133,10 @@ paths:
 definitions: 
   Empleado:
     type: object
+    required:
+      - nombre
+      - edad
+      - rol 
     properties:
       id:
         type: integer
@@ -147,6 +151,8 @@ definitions:
          
   Departamento:
     type: object
+    required:
+      - nombre
     properties:
       id:
         type: integer
@@ -164,6 +170,13 @@ definitions:
     properties:
       auditoria:
         type: object
+        required:
+          - ipApp
+          - nombreApp
+          - usuarioApp
+          - codigoApp
+          - codigoHttp
+          - mensajeApp
         properties:
           ipApp:
             type: string
